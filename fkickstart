@@ -1,0 +1,47 @@
+#version=DEVEL
+# X Window System configuration information
+xconfig  --startxonboot
+# Network information
+network  --bootproto=dhcp --device=enp0s3 --ipv6=auto --activate
+network  --bootproto=dhcp --hostname=localhost.localdomain
+# System authorization information
+auth --enableshadow --passalgo=sha512
+# Use graphical install
+graphical
+# Run the Setup Agent on first boot
+firstboot --enable
+# Use hard drive installation media
+harddrive --dir=None --partition=/dev/mapper/live-base
+# System services
+services --enabled="chronyd"
+# Keyboard layouts
+keyboard --vckeymap=us-euro --xlayouts='us (euro)'
+# System language
+lang nl_NL.UTF-8
+
+ignoredisk --only-use=sda
+# Root password
+rootpw --iscrypted $6$427JFtWwNNg/jhJb$A4W5MZM6PFyxwAzIL0BRsASu8342PDaQwDvXW59RKxqt./yPLR6twxlJlR6p9/Y5UFKmIVmZq24Dve9O.b1.9/
+# System timezone
+timezone Europe/Amsterdam --isUtc
+user --groups=wheel --name=cub --password=$6$OeCwMGz06Az6trKL$iQvoI/EL4c09.LvC6nn6JYh9L26nO79LeBSzzLO6AxKQnuGtzErmtSw9cbBglc3WtAojC.VVT7Kj.SwvQpZ050 --iscrypted --gecos="cub"
+# System bootloader configuration
+bootloader --location=mbr --boot-drive=sda
+autopart --type=lvm
+# Partition clearing information
+clearpart --all --initlabel --drives=sda
+
+%packages
+chrony
+
+%end
+
+%addon com_redhat_kdump --disable --reserve-mb='128'
+
+%end
+
+%anaconda
+pwpolicy root --minlen=0 --minquality=1 --notstrict --nochanges --emptyok
+pwpolicy user --minlen=0 --minquality=1 --notstrict --nochanges --emptyok
+pwpolicy luks --minlen=0 --minquality=1 --notstrict --nochanges --emptyok
+%end
